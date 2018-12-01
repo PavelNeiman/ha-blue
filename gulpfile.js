@@ -8,13 +8,15 @@ var gulp            = require('gulp'),
     del             = require('del'),
     imagemin        = require('gulp-imagemin'), // Подключаем библиотеку для работы с изображениями
     pngquant        = require('imagemin-pngquant'), // Подключаем библиотеку для работы с png // Подключаем библиотеку для удаления файлов и папок; // Подключаем библиотеку для переименования файлов
-    cache       = require('gulp-cache'); // Подключаем библиотеку кеширования
+    cache           = require('gulp-cache'), // Подключаем библиотеку кеширования
+    autoprefixer    = require('gulp-autoprefixer');// Подключаем библиотеку для автоматического добавления префиксов
     
 
 
 gulp.task('sass', function () {
     return gulp.src('app/sass/**/*.+(scss|sass)')    //исходник
         .pipe(sass())                        //команда
+        .pipe(autoprefixer(['last 15 versions', '> 1%', 'ie 8', 'ie 7'], { cascade: true })) // Создаем префиксы
         .pipe(gulp.dest('app/css'))          //результирующая директория
         .pipe(browserSync.reload({stream:true}))
 });
@@ -95,3 +97,14 @@ gulp.task('build', ['clean', 'img', 'sass', 'scripts'], function() {
 
 // Здесь, присваивая переменным какие-либо действия, мы их выполняем. Таким образом можно выполнять мультизадачные таски. Можно и не присваивать, но мы сделаем так, ибо красивше.
 
+
+
+
+gulp.task('clear', function(){
+    return cache.clearAll();
+})
+
+// Подчистка кэша, вызывается вручную
+
+
+gulp.task('default', ['watch']);  // чтоб автоматом
